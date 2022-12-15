@@ -5,7 +5,9 @@ const Game = ({ word }) => {
 
   return (
     <div className="container">
-      <div className="row justify-content-between fs-5 fw-bold border-bottom border-dark mb-1">
+      <div
+        className="row justify-content-between fs-5 fw-bold border-bottom border-dark mb-1"
+      >
         <div className="col">Score: {placeholderScore}</div>
         <div className="col text-end">
           Time Left: {placeholderTimeRemaining}
