@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import anagramsDataObject from "../utils/anagramsData";
 import WordLengthFrom from "./WordLengthForm";
 import Game from "./Game";
+import CongratsMessage from "./CongratsMessage";
+import PlayAgainButton from "./PlayAgainButton";
 
 const GameController = () => {
   // State variables
   const [userWordLengthInput, setUserWordLengthInput] = useState();
 
   const [
-    hasUserWordLengthInputBeenSubmitted,
-    setHasUserWordLengthInputBeenSubmitted,
+    hasUserInitialInputBeenSubmitted,
+    setHasUserInitialInputBeenSubmitted,
   ] = useState(false);
 
   const [gameData, setGameData] = useState();
@@ -47,17 +49,20 @@ const GameController = () => {
 
   // Render Logic
   const renderComponents = () => {
-    if (!hasUserWordLengthInputBeenSubmitted) {
+    if (!hasUserInitialInputBeenSubmitted) {
       return (
         <WordLengthFrom
           userWordLengthInput={userWordLengthInput}
           setUserWordLengthInput={setUserWordLengthInput}
-          setHasUserWordLengthInputBeenSubmitted={
-            setHasUserWordLengthInputBeenSubmitted
+          setHasUserInitialInputBeenSubmitted={
+            setHasUserInitialInputBeenSubmitted
           }
         />
       );
-    } else {
+    } else if (
+      hasUserInitialInputBeenSubmitted &&
+      gameData.answerArray.length > 0
+    ) {
       return (
         <Game
           gameData={gameData}
@@ -65,6 +70,19 @@ const GameController = () => {
           userScore={userScore}
           setUserScore={setUserScore}
         />
+      );
+    } else {
+      return (
+        <>
+          <CongratsMessage />
+          <PlayAgainButton
+            setHasUserInitialInputBeenSubmitted={
+              setHasUserInitialInputBeenSubmitted
+            }
+            setUserWordLengthInput={setUserWordLengthInput}
+            setUserScore={setUserScore}
+          />
+        </>
       );
     }
   };
