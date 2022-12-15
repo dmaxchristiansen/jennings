@@ -1,4 +1,5 @@
 const WordLengthForm = ({
+  userWordLengthInput,
   setUserWordLengthInput,
   setHasUserWordLengthInputBeenSubmitted,
 }) => (
@@ -35,6 +36,7 @@ const WordLengthForm = ({
       <button
         className="btn btn-primary"
         onClick={() => setHasUserWordLengthInputBeenSubmitted(true)}
+        disabled={!userWordLengthInput}
       >
         Play!
       </button>
