@@ -1,22 +1,64 @@
-const Game = ({ word }) => {
-  const placeholderScore = 1;
+const Game = ({ gameData, setGameData, userScore, setUserScore }) => {
   const placeholderTimeRemaining = 18;
-  const placeholderGuessCount = 2;
+
+  // Remove this console log before submission !!!
+  console.log(gameData);
+
+  const { selectedWord, answerArray } = gameData;
+
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    const userInput = document.answerForm.answerInput.value;
+
+    if (answerArray.includes(userInput)) {
+      answerArray.splice(answerArray.indexOf(userInput), 1);
+
+      setGameData({
+        ...gameData,
+        answerArray: answerArray,
+      });
+
+      setUserScore((userScore += 1));
+    }
+
+    document.answerForm.reset();
+  };
 
   return (
     <div className="container">
       <div
-        className="row justify-content-between fs-5 fw-bold border-bottom border-dark mb-1"
+        className="
+          row 
+          justify-content-between 
+          mb-1
+          border-bottom 
+          border-dark
+          fs-5 
+          fw-bold 
+        "
       >
-        <div className="col">Score: {placeholderScore}</div>
+        <div className="col">Score: {userScore}</div>
         <div className="col text-end">
           Time Left: {placeholderTimeRemaining}
         </div>
       </div>
+      <div className="row mb-3">
+        <div className="col-12 mx-auto text-center fs-2">
+          {selectedWord}
+          {`(${gameData.answerArray.length} left)`}
+        </div>
+      </div>
       <div className="row">
-        <div className="col-12 mx-auto text-center fs-2 mb-3">
-          {word}
-          {`(${placeholderGuessCount} left)`}
+        <div className="col-8 mx-auto fs-2">
+          <form name="answerForm" onSubmit={e => handleSubmit(e)}>
+            <input
+              name="answerInput"
+              type="text"
+              className="form-control text-center"
+              placeholder="type here"
+            />
+          </form>
         </div>
       </div>
     </div>
