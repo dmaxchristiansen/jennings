@@ -1,7 +1,7 @@
 const WordLengthForm = ({
   userWordLengthInput,
   setUserWordLengthInput,
-  setHasUserWordLengthInputBeenSubmitted,
+  setHasUserInitialInputBeenSubmitted,
 }) => (
   <form>
     <div className="row mb-3">
@@ -35,7 +35,7 @@ const WordLengthForm = ({
     <div className="d-grid">
       <button
         className="btn btn-primary"
-        onClick={() => setHasUserWordLengthInputBeenSubmitted(true)}
+        onClick={() => setHasUserInitialInputBeenSubmitted(true)}
         disabled={!userWordLengthInput}
       >
         Play!
