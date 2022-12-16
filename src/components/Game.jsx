@@ -1,6 +1,4 @@
-const Game = ({ gameData, setGameData, userScore, setUserScore }) => {
-  const placeholderTimeRemaining = 18;
-
+const Game = ({ gameData, setGameData, userScore, setUserScore, timeRemaining }) => {
   // Remove this console log before submission !!!
   console.log(gameData);
 
@@ -40,7 +38,11 @@ const Game = ({ gameData, setGameData, userScore, setUserScore }) => {
       >
         <div className="col">Score: {userScore}</div>
         <div className="col text-end">
-          Time Left: {placeholderTimeRemaining}
+          Time Left:
+          <span style={{display: "inline-block", width: 30}}>
+
+          {timeRemaining}
+          </span>
         </div>
       </div>
       <div className="row mb-3">

@@ -4,6 +4,7 @@ import WordLengthFrom from "./WordLengthForm";
 import Game from "./Game";
 import CongratsMessage from "./CongratsMessage";
 import PlayAgainButton from "./PlayAgainButton";
+import Results from "./Results";
 
 const GameController = () => {
   // State variables
@@ -16,7 +17,9 @@ const GameController = () => {
 
   const [gameData, setGameData] = useState();
 
-  const [userScore, setUserScore] = useState(0);
+  const [userScore, setUserScore] = useState();
+
+  const [timeRemaining, setTimeRemaining] = useState(60);
 
   // Game Logic
   useEffect(() => {
@@ -47,6 +50,16 @@ const GameController = () => {
     }
   }, [userWordLengthInput]);
 
+  useEffect(() => {
+    if (!hasUserInitialInputBeenSubmitted) return;
+    else {
+      const interval = setInterval(() => {
+        setTimeRemaining(timeRemaining - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  });
+
   // Render Logic
   const renderComponents = () => {
     if (!hasUserInitialInputBeenSubmitted) {
@@ -61,7 +74,8 @@ const GameController = () => {
       );
     } else if (
       hasUserInitialInputBeenSubmitted &&
-      gameData.answerArray.length > 0
+      gameData.answerArray.length > 0 &&
+      timeRemaining > 0
     ) {
       return (
         <Game
@@ -69,7 +83,26 @@ const GameController = () => {
           setGameData={setGameData}
           userScore={userScore}
           setUserScore={setUserScore}
+          timeRemaining={timeRemaining}
         />
+      );
+    } 
+    else if (
+      hasUserInitialInputBeenSubmitted &&
+      gameData.answerArray.length > 0 &&
+      timeRemaining <= 0
+    ) {
+      return (
+        <>
+          <Results />
+          <PlayAgainButton
+            setHasUserInitialInputBeenSubmitted={
+              setHasUserInitialInputBeenSubmitted
+            }
+            setUserWordLengthInput={setUserWordLengthInput}
+            setUserScore={setUserScore}
+          />
+        </>
       );
     } else {
       return (
