@@ -3,7 +3,7 @@ const GameContainer = ({ children }) => (
     <div className="row ">
       <div
         className="
-          col-4 
+          col
           mx-auto 
           p-3 
           border 
@@ -12,7 +12,7 @@ const GameContainer = ({ children }) => (
           rounded 
           bg-light
         "
-        style={{ minHeight: 500 }}
+        style={{ minHeight: 500, maxWidth: 500 }}
       >
         <h1 className="text-center mb-3">Anagram Hunt</h1>
         {children}

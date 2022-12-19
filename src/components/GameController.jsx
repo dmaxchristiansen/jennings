@@ -2,57 +2,34 @@ import { useEffect, useState } from "react";
 import anagramsDataObject from "../utils/anagramsData";
 import WordLengthFrom from "./WordLengthForm";
 import Game from "./Game";
-import CongratsMessage from "./CongratsMessage";
 import PlayAgainButton from "./PlayAgainButton";
 import Results from "./Results";
+import { getGameData } from "../utils/helpers";
 
 const GameController = () => {
-  // State variables
+  // Local state variables
   const [userWordLengthInput, setUserWordLengthInput] = useState();
-
   const [
     hasUserInitialInputBeenSubmitted,
     setHasUserInitialInputBeenSubmitted,
   ] = useState(false);
-
   const [gameData, setGameData] = useState();
+  const [userScore, setUserScore] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(10);
 
-  const [userScore, setUserScore] = useState();
-
-  const [timeRemaining, setTimeRemaining] = useState(60);
-
-  // Game Logic
+  // Set initial game data after user selects word length
   useEffect(() => {
     if (!userWordLengthInput) return;
     else {
-      const anagramsArrayByWordLengthKey =
-        anagramsDataObject[userWordLengthInput];
-
-      const anagramsArrayForGame =
-        anagramsArrayByWordLengthKey[
-          Math.floor(Math.random() * anagramsArrayByWordLengthKey.length)
-        ];
-
-      const wordSelectedForGame =
-        anagramsArrayForGame[
-          Math.floor(Math.random() * anagramsArrayForGame.length)
-        ];
-
-      const indexOfSelectedWord =
-        anagramsArrayForGame.indexOf(wordSelectedForGame);
-
-      anagramsArrayForGame.splice(indexOfSelectedWord, 1);
-
-      setGameData({
-        selectedWord: wordSelectedForGame,
-        answerArray: anagramsArrayForGame,
-      });
+      setGameData(getGameData(userWordLengthInput, anagramsDataObject));
     }
-  }, [userWordLengthInput]);
+  }, [userWordLengthInput, setGameData]);
 
   useEffect(() => {
     if (!hasUserInitialInputBeenSubmitted) return;
-    else {
+    // Stop timer if no gameData (i.e., game has been won)
+    else if (gameData) {
+      // Run timer
       const interval = setInterval(() => {
         setTimeRemaining(timeRemaining - 1);
       }, 1000);
@@ -74,11 +51,12 @@ const GameController = () => {
       );
     } else if (
       hasUserInitialInputBeenSubmitted &&
-      gameData.answerArray.length > 0 &&
+      gameData &&
       timeRemaining > 0
     ) {
       return (
         <Game
+          userWordLengthInput={userWordLengthInput}
           gameData={gameData}
           setGameData={setGameData}
           userScore={userScore}
@@ -86,35 +64,18 @@ const GameController = () => {
           timeRemaining={timeRemaining}
         />
       );
-    } 
-    else if (
-      hasUserInitialInputBeenSubmitted &&
-      gameData.answerArray.length > 0 &&
-      timeRemaining <= 0
-    ) {
+    } else if (!gameData && timeRemaining > 0) {
       return (
-        <>
-          <Results />
-          <PlayAgainButton
-            setHasUserInitialInputBeenSubmitted={
-              setHasUserInitialInputBeenSubmitted
-            }
-            setUserWordLengthInput={setUserWordLengthInput}
-            setUserScore={setUserScore}
-          />
-        </>
+        <div className="text-center">
+          <div className="fs-1 mb-5">You won!</div>
+          <PlayAgainButton />
+        </div>
       );
     } else {
       return (
         <>
-          <CongratsMessage />
-          <PlayAgainButton
-            setHasUserInitialInputBeenSubmitted={
-              setHasUserInitialInputBeenSubmitted
-            }
-            setUserWordLengthInput={setUserWordLengthInput}
-            setUserScore={setUserScore}
-          />
+          <Results userScore={userScore} />
+          <PlayAgainButton />
         </>
       );
     }
